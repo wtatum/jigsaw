@@ -1,3 +1,4 @@
+
 <script lang="ts">
     import { onMount } from "svelte";
     import QrScanner from "qr-scanner";
@@ -18,5 +19,7 @@
         scanner.start();
     })
 </script>
+
+This is the home page
 
 <video bind:this={videoEl} id="preview" />
