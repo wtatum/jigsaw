@@ -1,9 +1,8 @@
-import type { RequestHandler } from "./$types";
-import PDFDocument, { scale, translate } from "pdfkit";
+import PDFDocument from "pdfkit";
 import QRCode from "qrcode";
 import { v4 as uuidv4 } from "uuid";
 
-export const GET: RequestHandler = async ({request}) => {
+export const GET = async () => {
     const doc = new PDFDocument();
 
     // Initial setup
