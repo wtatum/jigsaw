@@ -3,8 +3,12 @@ import QRCode from "qrcode";
 import { v4 as uuidv4 } from "uuid";
 
 export const GET = async () => {
-    console.log("server generate code sheet PDF");
-    return new Response(await doc(3) as any);
+    // console.log("server generate code sheet PDF");
+    // return new Response(await doc(3) as any);
+
+    return new Response(JSON.stringify({
+        foo: "bar"
+    }))
 }
 
 const doc = async (pages: number) => {
