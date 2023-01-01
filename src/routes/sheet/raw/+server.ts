@@ -12,9 +12,12 @@ const doc = async (pages: number) => {
         autoFirstPage: false
     });
 
-    for(var i = 0; i < pages; i++) {
-        await page(doc);
-    }
+    doc.addPage();
+    doc.text("foo");
+
+    // for(var i = 0; i < pages; i++) {
+    //     await page(doc);
+    // }
 
     doc.end();
     return doc;
