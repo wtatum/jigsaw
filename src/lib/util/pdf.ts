@@ -1,34 +1,47 @@
-import PDFDocument from "pdfkit";
+import type * as PDFKit from "pdfkit";
+import PDFDocument from "pdfkit/js/pdfkit.standalone";
 import QRCode from "qrcode";
 import { v4 as uuidv4 } from "uuid";
 
-export const GET = async () => {
-    // console.log("server generate code sheet PDF");
-    // return new Response(await doc(3) as any);
+// The typings from standalone are funky
+const Document = PDFDocument as unknown as PDFKit.PDFDocument;
+type Doc = typeof PDFKit.default;
 
-    return new Response(JSON.stringify({
-        foo: "bar"
-    }))
-}
+export const create = () => new Document({
+    autoFirstPage: false
+});
 
-const doc = async (pages: number) => {
-    const doc = new PDFDocument({
-        autoFirstPage: false
-    });
+export const docToIframe = (doc: Doc, frame: HTMLIFrameElement) => {
+    const parts: BlobPart[] = [];
+    const onReadable = () => {
+        let bytes: string | Buffer;
+        while ((bytes = doc.read()) !== null) {
+            parts.push(bytes);
+        }
+    };
+    const onEnd = () => {
+        const ourl = window.URL.createObjectURL(new Blob(parts, {
+            type: "application/pdf"
+        }));
+        frame.src = ourl;
+        doc.removeAllListeners();
+    };
+    
+    doc.on('readable', onReadable);
+    doc.on('end', onEnd);
+};
 
-    doc.addPage();
-    doc.text("foo");
 
-    // for(var i = 0; i < pages; i++) {
-    //     await page(doc);
-    // }
+export const qrcodeSheet = async (doc: Doc, pages: number) => {
+    for(var i = 0; i < pages; i++) {
+        await page(doc);
+    }
 
     doc.end();
     return doc;
 }
 
-const page = async (doc: typeof PDFDocument) => {
-    console.log("server add page");
+const page = async (doc: Doc) => {
     doc.addPage();
     
     doc.scale(5);
@@ -61,13 +74,11 @@ const page = async (doc: typeof PDFDocument) => {
     await drawQR(doc, `https://example.com/${uuidv4()}`);
 }
 
-const drawQR = async (doc: typeof PDFDocument, value: string) => {
+const drawQR = async (doc: Doc, value: string) => {
     const qr = await QRCode.toString(value, {
         type: "svg",
         margin: 0
     });
-
-    console.log("qr string", qr.length);
 
     // Assume the second match is the code (first is the border)
 

@@ -1,8 +1,5 @@
 <script lang="ts">
-    let frameEl: HTMLIFrameElement;
+    import PdfGen from "$lib/PdfGen.svelte";
 </script>
 
-<iframe bind:this={frameEl} on:load={ () => frameEl.contentWindow?.print() } style="display:none" />
-<button on:click={ () => { 
-    frameEl.src = "./sheet/raw";
-}}>Print</button>
+<PdfGen />
