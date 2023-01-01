@@ -3,24 +3,26 @@ import QRCode from "qrcode";
 import { v4 as uuidv4 } from "uuid";
 
 export const GET = async () => {
-    const doc = new PDFDocument();
+    return new Response(await doc(3) as any);
+}
 
-    // Initial setup
-    // doc.fillColor('red')
-    // .translate(-100, -50)
-    // .scale(0.8);
+const doc = async (pages: number) => {
+    const doc = new PDFDocument({
+        autoFirstPage: false
+    });
 
-    // // Draw the path with the non-zero winding rule
-    // doc.path('M 250,75 L 323,301 131,161 369,161 177,301 z')
-    // .fill('non-zero');
+    for(var i = 0; i < pages; i++) {
+        await page(doc);
+    }
 
-    // // Draw the path with the even-odd winding rule
-    // doc.translate(280, 0)
-    // .path('M 250,75 L 323,301 131,161 369,161 177,301 z')
-    // .fill('even-odd');
+    doc.end();
+    return doc;
+}
 
+const page = async (doc: typeof PDFDocument) => {
+    doc.addPage();
+    
     doc.scale(5);
-
     doc.translate(6, 6);
     await drawQR(doc, `https://example.com/${uuidv4()}`);
     doc.translate(38, 0);
@@ -48,10 +50,6 @@ export const GET = async () => {
     await drawQR(doc, `https://example.com/${uuidv4()}`);
     doc.translate(38, 0);
     await drawQR(doc, `https://example.com/${uuidv4()}`);
-
-    doc.end();
-
-    return new Response(doc as any);
 }
 
 const drawQR = async (doc: typeof PDFDocument, value: string) => {
