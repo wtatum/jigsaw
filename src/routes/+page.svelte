@@ -5,10 +5,16 @@
 
     let videoEl: HTMLVideoElement;
     let scanner: QrScanner;
+
+    let tag: string | undefined; 
+
     onMount( () => {
         scanner = new QrScanner(
             videoEl,
-            console.log,
+            (obj) => {
+                const [_, scanned] = /\/p\/(.+)/.exec(obj.data) || [];
+                tag = scanned; 
+            },
             {
                 returnDetailedScanResult: true,
                 highlightCodeOutline: true,
@@ -23,3 +29,4 @@
 This is the home page
 
 <video bind:this={videoEl} id="preview" />
+{tag || ""}

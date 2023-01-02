@@ -12,10 +12,10 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
 	// Set up local HTTPS so browser secure features are available for testing
 	if (command === 'serve') {
 		config.server = {
-			// https: {
-			// 	key: fs.readFileSync("../cert/asriel.coyote-little.ts.net.key"),
-			// 	cert: fs.readFileSync("../cert/asriel.coyote-little.ts.net.crt"),
-			// }
+			https: {
+				key: fs.readFileSync("../cert/asriel.coyote-little.ts.net.key"),
+				cert: fs.readFileSync("../cert/asriel.coyote-little.ts.net.crt"),
+			}
 		};
 	}
 	

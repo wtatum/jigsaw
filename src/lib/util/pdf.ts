@@ -43,35 +43,27 @@ export const qrcodeSheet = async (doc: Doc, pages: number) => {
 
 const page = async (doc: Doc) => {
     doc.addPage();
-    
-    doc.scale(5);
-    doc.translate(6, 6);
-    await drawQR(doc, `https://example.com/${uuidv4()}`);
-    doc.translate(38, 0);
-    await drawQR(doc, `https://example.com/${uuidv4()}`);
-    doc.translate(38, 0);
-    await drawQR(doc, `https://example.com/${uuidv4()}`);
 
-    doc.translate(-76, 38);
-    await drawQR(doc, `https://example.com/${uuidv4()}`);
-    doc.translate(38, 0);
-    await drawQR(doc, `https://example.com/${uuidv4()}`);
-    doc.translate(38, 0);
-    await drawQR(doc, `https://example.com/${uuidv4()}`);
-
-    doc.translate(-76, 38);
-    await drawQR(doc, `https://example.com/${uuidv4()}`);
-    doc.translate(38, 0);
-    await drawQR(doc, `https://example.com/${uuidv4()}`);
-    doc.translate(38, 0);
-    await drawQR(doc, `https://example.com/${uuidv4()}`);
+    const SCALE = 3.75;
+    const LEFT = 3;
+    const TOP = 3; //7;
+    const SPACE = 40;
+    const COL = 4;
+    const ROW = 5;
     
-    doc.translate(-76, 38);
-    await drawQR(doc, `https://example.com/${uuidv4()}`);
-    doc.translate(38, 0);
-    await drawQR(doc, `https://example.com/${uuidv4()}`);
-    doc.translate(38, 0);
-    await drawQR(doc, `https://example.com/${uuidv4()}`);
+    const BASE = `https://jigsaw-raleigh.netlify.app/p`
+
+    doc.scale(SCALE);
+    doc.translate(LEFT, TOP);
+
+    for (let i=0; i<ROW; i++) {
+        for (let j=0; j<COL; j++) {
+            const url = `${window.origin}/${uuidv4()}`;
+            await drawQR(doc, `${BASE}/${uuidv4()}`);
+            doc.translate(SPACE, 0);
+        }
+        doc.translate(-COL * SPACE, SPACE);
+    }
 }
 
 const drawQR = async (doc: Doc, value: string) => {
